@@ -669,7 +669,15 @@ subrepo:push() {
   upstream_head_commit="$new_upstream_head_commit"
   subrepo_commit_ref="$upstream_head_commit"
   update-gitrepo-file
-  RUN git commit -m "$(get-commit-message)"
+
+  local commit_message
+  if [[ -n "$wanted_commit_message" ]]; then
+    commit_message="$wanted_commit_message"
+  fi
+
+  [[ -n $commit_message ]] || commit_message="$(get-commit-message)"
+
+  RUN git commit -m "$commit_message"
 }
 
 # Fetch the subrepo's remote branch content:
@@ -1080,7 +1088,7 @@ options_commit='edit fetch force message'
 options_fetch='all branch remote'
 options_init='branch remote method'
 options_pull='all branch edit force message remote update'
-options_push='all branch force remote squash update'
+options_push='all branch force message remote squash update'
 options_status='ALL all fetch'
 check_option() {
   local var="options_${command//-/_}"
