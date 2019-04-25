@@ -1766,7 +1766,9 @@ git:is_merge_commit() {
 git:create-worktree() {
   local branch="$1"
   worktree="$GIT_TMP/$branch"
-  RUN git worktree add "$worktree" "$branch"
+  if [[ ! -d "$worktree" ]]; then
+    RUN git worktree add "$worktree" "$branch"
+  fi
 }
 
 git:remove-worktree() {
